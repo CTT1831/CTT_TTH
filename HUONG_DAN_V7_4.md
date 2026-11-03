@@ -1,0 +1,1 @@
+V7.4: Xóa tài khoản chỉ cần nhập mật khẩu hiện tại rồi nhấn nút Xóa. Bỏ hộp thoại confirm và bước gõ XOA TAI KHOAN. Vẫn xác thực mật khẩu với Supabase và gọi Edge Function delete-account, phải triển khai Edge Function để xóa thực sự. Giữ nguyên config.js đã cấu hình trên GitHub khi tải lên. Sao lưu dữ liệu trước khi xóa.
