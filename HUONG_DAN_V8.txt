@@ -1,0 +1,13 @@
+THU CHI V8 - HÓA ĐƠN ĐIỆN NƯỚC VÀ GIỜ 24H
+
+1. Sao lưu JSON từ web V7 trước khi thay file.
+2. Supabase > SQL Editor > New query: chạy toàn bộ CAP_NHAT_SQL_V8.sql. Lệnh này mở rộng ràng buộc bảng hiện tại, KHÔNG xóa dữ liệu.
+3. Giữ nguyên file config.js ĐÃ ĐIỀN THÔNG TIN CỦA BẠN trên GitHub; KHÔNG ghi đè bằng file config.js mặc định trong ZIP nếu không muốn mất cấu hình.
+4. Tải các file còn lại lên repository CTT1831/CTT_TTH, ghi đè file trùng tên và thêm CAP_NHAT_SQL_V8.sql nếu muốn.
+5. Chờ GitHub Pages triển khai, mở https://ctt1831.github.io/CTT_TTH/ và tải lại (đóng/mở nếu vẫn thấy bản cũ).
+6. Chọn ☰ > Điện & nước > Thêm hóa đơn; nhập tên nhà, loại điện/nước, tháng, số tiền, hạn và trạng thái đã thanh toán.
+7. To-do List > Thêm việc: giờ / phút là 2 ô số riêng, dấu : luôn nằm giữa, giờ 24h.
+8. Khi nhập dữ liệu thử từ điện thoại, bấm 'Đồng bộ ngay' và kiểm tra cùng tài khoản trên máy tính.
+9. Hóa đơn tách riêng với khoản Thu Chi để tránh cộng trùng; bạn có thể ghi riêng khoản chi khi thanh toán nếu cần.
+
+BẢO MẬT: không đưa service_role/secret key, mật khẩu vào GitHub. Tệp config.js trong ZIP chỉ là mẫu.
