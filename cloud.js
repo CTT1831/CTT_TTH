@@ -1,6 +1,6 @@
 /* Thu Chi V7: Supabase REST + bộ nhớ cục bộ. Không gửi dữ liệu đi nơi khác. */
 (function(){'use strict';
-const names={transactions:'so-thu-chi-v1',debts:'so-thu-chi-debts-v1',tasks:'so-thu-chi-tasks-v1',logs:'so-thu-chi-log-v1',bills:'so-thu-chi-bills-v1'};
+const names={transactions:'so-thu-chi-v1',debts:'so-thu-chi-debts-v1',tasks:'so-thu-chi-tasks-v1',logs:'so-thu-chi-log-v1',categories:'so-thu-chi-categories-v1'};
 const url=()=>String(window.SUPABASE_URL||'').replace(/\/$/,'');
 const key=()=>String(window.SUPABASE_ANON_KEY||'');
 const ready=()=>{if(!url().startsWith('https://')||url().includes('REPLACE-ME')||key().startsWith('REPLACE-'))throw Error('Chưa điền Supabase URL và publishable/anon key trong config.js')};

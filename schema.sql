@@ -1,7 +1,7 @@
 -- Chạy trong Supabase SQL Editor. BẮT BUỘC dùng RLS trước khi đăng web.
 create table if not exists public.personal_data (
  user_id uuid not null references auth.users(id) on delete cascade,
- section text not null check (section in ('transactions','debts','tasks','logs','bills')),
+ section text not null check (section in ('transactions','debts','tasks','logs')),
  content jsonb not null default '[]'::jsonb,
  updated_at timestamptz not null default now(),
  primary key (user_id, section)
