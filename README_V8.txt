@@ -9,3 +9,5 @@ CÓ GÌ MỚI:
 - Sổ nợ gom theo tên (không phân biệt hoa thường/khoảng trắng), tổng nợ từng người, gợi ý tên đã nhập.
 - To-do cho phép nhắc lại sau khi quá hạn cho đến khi đánh dấu hoàn thành.
 HẠN CHẾ: nhắc lại chỉ đáng tin khi trang còn chạy; web đóng hẳn không có bộ lập lịch từ server.
+
+- Bản hoàn chỉnh bổ sung mục Hóa đơn (bills): lưu thông tin, ảnh hóa đơn, sửa/xóa, sao lưu/khôi phục và đồng bộ Supabase.

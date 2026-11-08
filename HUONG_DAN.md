@@ -26,3 +26,12 @@
 - GitHub Pages chứa mã nguồn **công khai** nếu dùng repository Public: không đặt mật khẩu/khóa bí mật vào repo.
 - Nên sao lưu JSON định kỳ; dịch vụ miễn phí có hạn mức và có thể tạm dừng dự án khi lâu không dùng.
 - Chưa kiểm thử end-to-end với một Supabase project thực tế (cần thông tin cấu hình của bạn).
+
+
+## Hóa đơn V8 hoàn chỉnh
+- Mục Hóa đơn được tách riêng khỏi Thu chi.
+- Có thể lưu tên đơn vị, số tiền, ngày, ghi chú và ảnh hóa đơn.
+- Ảnh được nén trước khi lưu để giảm dung lượng.
+- Hóa đơn được đồng bộ lên Supabase ở section `bills`.
+- Bản sao lưu JSON có thêm `bills`.
+- Không cần xóa dữ liệu Supabase hiện có.
