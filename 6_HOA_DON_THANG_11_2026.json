@@ -1,0 +1,70 @@
+{
+  "bills": [
+    {
+      "id": "50fedec7-093c-4da3-88e0-7933e6538b38",
+      "due": "",
+      "note": "050476",
+      "paid": true,
+      "type": "water",
+      "house": "Nhà",
+      "amount": 110000,
+      "paidAt": "2026-11-05T02:37:28.311Z",
+      "period": "2026-11"
+    },
+    {
+      "id": "8cc6f100-9939-413e-a9ca-1e6e89786f05",
+      "due": "",
+      "note": "061363",
+      "paid": true,
+      "type": "water",
+      "house": "Bà",
+      "amount": 69000,
+      "paidAt": "2026-11-05T02:37:27.025Z",
+      "period": "2026-11"
+    },
+    {
+      "id": "6f323024-00d4-41f0-9810-f16ac6d86477",
+      "due": "",
+      "note": "",
+      "paid": true,
+      "type": "electric",
+      "house": "Bác Hùng",
+      "amount": 789000,
+      "paidAt": "2026-11-05T02:37:11.600Z",
+      "period": "2026-11"
+    },
+    {
+      "id": "a21c9e03-657c-480b-b805-76e4f7b5385e",
+      "due": "",
+      "note": "",
+      "paid": true,
+      "type": "electric",
+      "house": "Bà",
+      "amount": 446000,
+      "paidAt": "2026-11-05T02:38:11.802Z",
+      "period": "2026-11"
+    },
+    {
+      "id": "be24e3ce-4399-42e1-ab23-5003523e2826",
+      "due": "",
+      "note": "",
+      "paid": true,
+      "type": "electric",
+      "house": "Bác Thủy",
+      "amount": 789000,
+      "paidAt": "2026-11-05T02:39:11.125Z",
+      "period": "2026-11"
+    },
+    {
+      "id": "dc76c0b9-e1a4-435b-ae33-d4b2eeea2fe3",
+      "due": "",
+      "note": "",
+      "paid": true,
+      "type": "electric",
+      "house": "Nhà",
+      "amount": 546000,
+      "paidAt": "2026-11-05T02:39:41.511Z",
+      "period": "2026-11"
+    }
+  ]
+}
