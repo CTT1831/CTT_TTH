@@ -13,6 +13,14 @@
 .calendarbar{display:flex;gap:8px;margin:18px 0;flex-wrap:wrap}.calendarbar button{border:0;border-radius:12px;background:#e9edf5;color:#3a527c;padding:10px 14px}.calendarbar button.active{background:#304fa8;color:#fff}.calnav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:12px 0 18px}.calnav button{background:#fff;border:0;border-radius:12px;padding:10px 14px}.calgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}.calweekday{text-align:center;color:#73819b;font-size:11px;font-weight:700;padding:6px 0}.calday{min-height:72px;background:white;border:1px solid #e2e7f2;border-radius:12px;padding:8px 5px;text-align:left;color:#253859}.calday.out{opacity:.35}.calday.today{border:2px solid #365bc0}.calday.selected{background:#e9efff;border-color:#365bc0}.calday b{font-size:12px}.calday em{display:block;margin-top:8px;font-size:11px;font-style:normal;color:#2c55ba}.calday .late{color:#dd5360}.calitems{margin-top:18px}.calitem{border-left:4px solid #4d6bd2;background:#fff;padding:13px 14px;border-radius:12px;margin:9px 0}.calitem.done{opacity:.65;border-color:#20a678}.calitem.over{border-color:#e45a66}.calitem strong{display:block}.calitem small{display:block;color:#78869b;margin-top:5px}.calitem button{border:0;background:#e9edf7;color:#244481;border-radius:9px;padding:7px 12px;margin-top:9px}.accountbar{display:flex;gap:8px;align-items:center;justify-content:space-between;background:#fff;padding:12px;border-radius:13px;font-size:13px}.accountbar button{border:0;background:#ffe9ec;color:#c13c53;padding:8px 12px;border-radius:10px}#calendarPage{margin-top:25px}
 .billgroup{margin:14px 0 18px;border:1px solid #dce4f0;border-radius:17px;padding:10px;background:#f7f9fe}.billgrouphead{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;padding:7px 5px 8px}.billgrouphead strong{font-size:17px;color:#273b60}.billgrouphead span{font-size:12px;color:#576b84}.billgroup .billcard{margin:7px 0}
 .sectionImport{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0 12px}.sectionImport button{border:1px solid #d1dbee;background:#f7f9ff;border-radius:11px;padding:10px 12px;color:#365283;font-weight:650}
+.debtPersonRow{display:block!important;cursor:default!important;padding:14px 0!important}
+.debtPersonInfo{min-width:0;width:100%}
+.debtPersonTop{display:flex;align-items:baseline;justify-content:space-between;gap:10px;font-weight:650}
+.debtPersonTop span{overflow-wrap:anywhere}
+.debtPersonTop b{white-space:nowrap}
+.debtPersonActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}
+.debtPayAllBtn{background:#e7f5ed;color:#176a42;border:1px solid #bce2ce;border-radius:10px;padding:10px 12px;min-height:40px;font-size:13px;font-weight:700;cursor:pointer}
+.debtPayAllBtn:active{background:#cfe9db}
 </style><style>#syncBar{background:#e7efff;border:1px solid #c9d9ff;padding:12px 16px;border-radius:14px;margin:10px 0;color:#284577;font-size:13px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}#syncBar button{border:0;background:#3155ae;color:#fff;border-radius:9px;padding:8px 13px}#legacyBox{margin-top:12px;padding:12px;background:#fff;border-radius:12px}#legacyBox select{margin:6px 0}</style><style>
 .summaryBox{background:#fff;border-radius:16px;padding:14px;margin:15px 0;box-shadow:0 2px 12px #1a2e5108}.summaryBox h3{margin:0 0 10px}.summaryLine{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid #edf1fa;cursor:pointer;transition:.12s;background:transparent;border-left:0;border-right:0;border-top:0;width:100%;text-align:left;font:inherit;color:inherit}.summaryLine:hover,.summaryLine:focus-visible{background:#f4f7ff;padding-left:8px;padding-right:8px;outline:none}.summaryLine:last-child{border:0}.summaryLine b{white-space:nowrap}.summaryLine small{display:block;color:#68778e}.summaryDetail{margin-top:10px;background:#f7f9fd;border:1px solid #e4e9f3;border-radius:13px;padding:10px}.summaryDetailTitle{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:7px}.summaryDetailTitle b{font-size:14px}.summaryDetailClose{border:0;background:#e9edf5;border-radius:8px;padding:6px 9px;color:#425477}.summaryDetailItem{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-top:1px solid #e5eaf2;font-size:13px}.summaryDetailItem small{color:#748198;display:block}.summaryDetailItem b{white-space:nowrap}.inlineAdd{display:flex;gap:8px;align-items:center;margin-top:8px}.inlineAdd input{flex:1;min-width:0}.inlineAdd button{border:0;border-radius:10px;background:#304fa8;color:white;padding:12px}.hintMini{font-size:12px;color:#67758c}
 </style></head><body><script>
@@ -45,7 +53,58 @@ const today=()=>{const d=new Date();return [d.getFullYear(),String(d.getMonth()+
 const id=()=>globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random()}`;
 const amountOf=v=>Number(String(v).replace(/\D/g,''));
 const fmt=e=>{let n=String(e.target.value).replace(/\D/g,'').slice(0,13);e.target.value=n?new Intl.NumberFormat('vi-VN').format(Number(n)):''};
-let debts=[],debtView='open',editing=null,paying=null;const normalizeName=n=>String(n).trim().replace(/\s+/g,' ').toLocaleLowerCase('vi');function personSummaries(){const map=new Map();for(const d of debts){const key=normalizeName(d.person);if(!map.has(key))map.set(key,{name:d.person,owe:0,owed:0,original:0});const item=map.get(key);item.original+=d.amount;item[d.direction==='i_owe'?'owe':'owed']+=remain(d)}const root=$('debtPeopleSummary');root.replaceChildren();for(const v of [...map.values()].filter(x=>x.owe||x.owed).sort((a,b)=>b.owe+b.owed-a.owe-a.owed)){const row=document.createElement('div');row.className='summaryLine';const left=document.createElement('span');left.textContent=v.name;const detail=document.createElement('small');detail.textContent='Tôi nợ: '+money(v.owe)+' • Nợ tôi: '+money(v.owed);left.append(detail);const right=document.createElement('b');right.textContent=money(v.owe+v.owed);row.append(left,right);root.append(row)}if(!root.childElementCount)root.textContent='Không có khoản nợ chưa trả';const list=$('debtPeopleOptions');list.replaceChildren();for(const v of map.values()){const o=document.createElement('option');o.value=v.name;list.append(o)}}
+let debts=[],debtView='open',editing=null,paying=null;
+const normalizeName=n=>String(n).trim().replace(/\s+/g,' ').toLocaleLowerCase('vi');
+function payAllForPerson(name,direction){
+ const items=debts.filter(d=>normalizeName(d.person)===normalizeName(name)&&d.direction===direction&&remain(d)>0);
+ if(!items.length){alert('Người này không còn khoản nợ thuộc nhóm đã chọn.');return}
+ const total=items.reduce((s,d)=>s+remain(d),0);
+ const caption=direction==='owe_me'?'người này đã trả hết nợ cho bạn':'bạn đã trả hết nợ cho người này';
+ if(!confirm(`Xác nhận ${caption}?\n\nTên: ${name}\nSố khoản: ${items.length}\nTổng cần gạch: ${money(total)}\n\nMỗi khoản sẽ được lưu một lần thanh toán riêng vào lịch sử. Không xóa các khoản nợ.`))return;
+ const date=today();
+ if(persist(()=>{
+  for(const item of items)item.payments.push({id:id(),date,amount:remain(item)});
+ }))alert('Đã gạch hết '+items.length+' khoản của '+name+' ('+money(total)+'). Xem lại tại Lịch sử.');
+}
+function personSummaries(){
+ const map=new Map();
+ for(const d of debts){
+  const key=normalizeName(d.person);
+  if(!map.has(key))map.set(key,{name:d.person,owe:0,owed:0,original:0,oweCount:0,owedCount:0});
+  const item=map.get(key),remaining=remain(d);
+  item.original+=d.amount;
+  if(d.direction==='i_owe'){item.owe+=remaining;if(remaining>0)item.oweCount++}
+  else{item.owed+=remaining;if(remaining>0)item.owedCount++}
+ }
+ const root=$('debtPeopleSummary');root.replaceChildren();
+ for(const v of [...map.values()].filter(x=>x.owe||x.owed).sort((a,b)=>b.owe+b.owed-a.owe-a.owed)){
+  const row=document.createElement('div');row.className='summaryLine debtPersonRow';
+  const info=document.createElement('div');info.className='debtPersonInfo';
+  const top=document.createElement('div');top.className='debtPersonTop';
+  const left=document.createElement('span');left.textContent=v.name;
+  const right=document.createElement('b');right.textContent=money(v.owe+v.owed);
+  top.append(left,right);
+  const detail=document.createElement('small');detail.textContent='Tôi nợ: '+money(v.owe)+' • Nợ tôi: '+money(v.owed);
+  info.append(top,detail);
+  const actions=document.createElement('div');actions.className='debtPersonActions';
+  if(v.owed>0){
+   const button=document.createElement('button');button.type='button';button.className='debtPayAllBtn';
+   button.textContent='✓ Đã thu đủ '+money(v.owed);
+   button.setAttribute('aria-label','Gạch hết '+v.owedCount+' khoản người '+v.name+' nợ tôi');
+   button.onclick=()=>payAllForPerson(v.name,'owe_me');actions.append(button);
+  }
+  if(v.owe>0){
+   const button=document.createElement('button');button.type='button';button.className='debtPayAllBtn';
+   button.textContent='✓ Đã trả đủ '+money(v.owe);
+   button.setAttribute('aria-label','Gạch hết '+v.oweCount+' khoản tôi nợ '+v.name);
+   button.onclick=()=>payAllForPerson(v.name,'i_owe');actions.append(button);
+  }
+  row.append(info,actions);root.append(row);
+ }
+ if(!root.childElementCount)root.textContent='Không có khoản nợ chưa trả';
+ const list=$('debtPeopleOptions');list.replaceChildren();
+ for(const v of map.values()){const o=document.createElement('option');o.value=v.name;list.append(o)}
+}
 function valid(d){return d&&typeof d.id==='string'&&['i_owe','owe_me'].includes(d.direction)&&typeof d.person==='string'&&Number.isSafeInteger(d.amount)&&d.amount>0&&d.amount<=1e12&&/^\d{4}-\d{2}-\d{2}$/.test(d.date)&&typeof d.note==='string'&&Array.isArray(d.payments)&&d.payments.every(p=>Number.isSafeInteger(p.amount)&&p.amount>0&&typeof p.date==='string')}
 function load(){try{const a=JSON.parse(localStorage.getItem(KEY)||'[]');debts=Array.isArray(a)?a.filter(valid):[]}catch{debts=[]}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(debts));return true}catch{alert('Không lưu được sổ nợ. Kiểm tra bộ nhớ trình duyệt.');return false}}
@@ -87,12 +146,27 @@ function showDueBanner(due){
  const close=document.createElement('button');close.textContent='Đã xem ✕';close.style.cssText='margin-top:10px;background:#3152aa;color:white;border:0;border-radius:9px;padding:8px 14px;cursor:pointer';close.onclick=()=>box.remove();box.append(title,detail,close);
 }
 async function systemDueNotification(due){
- if(!('Notification' in window)||!window.isSecureContext||Notification.permission!=='granted')return false;
- const options={body:due.slice(0,5).map(t=>t.title).join(' • ')+(due.length>5?'…':''),tag:'todo-due-summary',icon:'./icon-192.png',badge:'./icon-192.png',renotify:true,requireInteraction:false};
- try{
-  if('serviceWorker' in navigator){try{const reg=await navigator.serviceWorker.ready;await reg.showNotification('⏰ '+due.length+' việc cần làm',options);return true}catch(e){console.warn('Service worker notification lỗi:',e)}}
-  const n=new Notification('⏰ '+due.length+' việc cần làm',options);n.onclick=()=>{window.focus();showDueBanner(due)};return true;
- }catch(e){console.warn('Không thể hiện thông báo hệ thống:',e);return false}
+ if(!('Notification' in window)||!window.isSecureContext||Notification.permission!=='granted')return [];
+ const sent=[];
+ let reg=null;
+ if('serviceWorker' in navigator){
+  try{reg=await navigator.serviceWorker.ready}catch(e){console.warn('Service worker chưa sẵn sàng:',e)}
+ }
+ for(const t of due){
+  // Mỗi công việc có một tag duy nhất, không ghi đè thông báo của công việc khác.
+  const tag='todo-task-'+encodeURIComponent(String(t.id));
+  const title='⏰ '+t.title;
+  const options={body:'Hạn: '+fmtDate(t.deadline)+(new Date(t.deadline).getTime()<Date.now()?' • Quá hạn':''),tag,icon:'./icon-192.png',badge:'./icon-192.png',renotify:true,requireInteraction:false,data:{taskId:t.id}};
+  try{
+   if(reg)await reg.showNotification(title,options);
+   else{
+    const n=new Notification(title,options);
+    n.onclick=()=>{window.focus();showDueBanner([t]);n.close()};
+   }
+   sent.push(t.id);
+  }catch(e){console.warn('Không hiện được thông báo:',t.title,e)}
+ }
+ return sent;
 }
 // Lịch sử nhắc của lần mở web trước không dùng để tính các lần nhắc của phiên này.
 const remindedThisOpening=new Map();let checkingDue=false;
@@ -109,15 +183,20 @@ async function checkDue(){
   });
   if(!due.length)return;
   const sent=await systemDueNotification(due);
-  if(!sent&&document.visibilityState!=='visible')return;
-  if(document.visibilityState==='visible')showDueBanner(due);
-  const at=Date.now();for(const t of due)remindedThisOpening.set(t.id,{at});
+  // Banner trên web chỉ là dự phòng khi thiếu quyền thông báo hệ thống.
+  const unsent=due.filter(t=>!sent.includes(t.id));
+  if(unsent.length&&document.visibilityState==='visible')showDueBanner(unsent);
+  const at=Date.now();
+  for(const t of due){
+   if(sent.includes(t.id)||(unsent.includes(t)&&document.visibilityState==='visible'))
+    remindedThisOpening.set(t.id,{at});
+  }
  }finally{checkingDue=false}
 }
 $('notifyEnable').onclick=async()=>{
  if(!('Notification' in window)){alert('Trình duyệt không hỗ trợ thông báo hệ thống.');return}
  if(!window.isSecureContext){alert('Bạn đang mở file trực tiếp. Hãy mở web bằng HTTPS (ví dụ GitHub Pages) để bật thông báo.');return}
- try{const r=Notification.permission==='granted'?'granted':await Notification.requestPermission();if(r==='granted'){alert('✅ Đã bật thông báo. Khi trang Thu Chi vẫn đang mở ở tab nền, thông báo sẽ hiện cả khi bạn đang xem web khác. Nếu đã quá hạn và có đặt Lặp lại 5 phút, hệ thống sẽ tiếp tục báo lại.');checkDue()}else{alert('⚠️ Chưa cấp quyền thông báo. Hãy cho phép Thông báo trong cài đặt trình duyệt.')}}catch(e){alert('Không thể cấp quyền: '+e.message)}
+ try{const r=Notification.permission==='granted'?'granted':await Notification.requestPermission();if(r==='granted'){alert('✅ Đã bật thông báo. Khi trang Thu Chi vẫn đang mở ở tab nền, mỗi công việc sẽ có thông báo riêng khi web vẫn đang mở. Nếu đã quá hạn và có đặt Lặp lại 5 phút, hệ thống sẽ tiếp tục báo lại.');checkDue()}else{alert('⚠️ Chưa cấp quyền thông báo. Hãy cho phép Thông báo trong cài đặt trình duyệt.')}}catch(e){alert('Không thể cấp quyền: '+e.message)}
 };
 function getArr(key){try{const a=JSON.parse(localStorage.getItem(key)||'[]');return Array.isArray(a)?a:[]}catch{return []}}
 function download(name,mime,text){const blob=new Blob([text],{type:mime}),a=document.createElement('a'),url=URL.createObjectURL(blob);a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000)}
