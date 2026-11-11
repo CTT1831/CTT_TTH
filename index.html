@@ -21,7 +21,22 @@
 .debtPersonActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}
 .debtPayAllBtn{background:#e7f5ed;color:#176a42;border:1px solid #bce2ce;border-radius:10px;padding:10px 12px;min-height:40px;font-size:13px;font-weight:700;cursor:pointer}
 .debtPayAllBtn:active{background:#cfe9db}
-</style><style>#syncBar{background:#e7efff;border:1px solid #c9d9ff;padding:12px 16px;border-radius:14px;margin:10px 0;color:#284577;font-size:13px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}#syncBar button{border:0;background:#3155ae;color:#fff;border-radius:9px;padding:8px 13px}#legacyBox{margin-top:12px;padding:12px;background:#fff;border-radius:12px}#legacyBox select{margin:6px 0}</style><style>
+
+
+.debtPersonAccordion{border-bottom:1px solid #e8edf5}.debtPersonAccordion:last-child{border:0}
+.debtPersonToggle{display:flex;align-items:center;gap:10px;padding:13px 4px;width:100%;text-align:left;background:transparent;border:0;color:inherit;font:inherit;cursor:pointer}
+.debtPersonToggle:hover,.debtPersonToggle:focus-visible{background:#f3f6fc;border-radius:9px}
+.debtPersonText{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.debtPersonText strong{font-weight:650;overflow-wrap:anywhere}.debtPersonText small{font-size:12px;color:#6c7990;line-height:1.4}
+.debtPersonToggle>b{white-space:nowrap;font-size:14px}.debtPersonArrow{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;flex:0 0 34px;border-radius:9px;background:#e7efff;font-size:28px;font-weight:800;color:#294fa6;transition:transform .2s}
+.debtPersonToggle[aria-expanded=true] .debtPersonArrow{transform:rotate(180deg)}
+.debtPersonActions{margin:0 0 12px 4px}.debtPersonActions .debtPayAllBtn{width:100%;text-align:center}.debtPersonExpanded{background:#f5f8ff;border-radius:12px;padding:12px;margin-bottom:12px}
+.debtPersonExpanded[hidden]{display:none!important}.debtPersonDebtItem{display:flex;gap:12px;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #e0e7f4}
+.debtPersonItemMain{flex:1;min-width:0}.debtPersonItemMain strong{display:block;font-size:13px}.debtPersonItemMain small{display:block;color:#697894;font-size:12px;margin-top:3px;overflow-wrap:anywhere}
+.debtPersonPayBtn{border:0;border-radius:9px;background:#3155ae;color:#fff;padding:10px;font-size:12px;font-weight:650;cursor:pointer}
+.debtPersonExpanded>.debtPayAllBtn{display:block;margin-top:10px;width:100%;text-align:center}
+@media(max-width:420px){.debtPersonDebtItem{align-items:stretch;flex-direction:column}.debtPersonPayBtn{width:100%}}
+.debtPersonPaid{color:#168050!important;font-weight:700}.debtPersonUnpaid{color:#b16b0a!important;font-weight:600}.debtPersonDebtItem .debtPersonItemMain small{display:block;margin-top:4px}</style><style>#syncBar{background:#e7efff;border:1px solid #c9d9ff;padding:12px 16px;border-radius:14px;margin:10px 0;color:#284577;font-size:13px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}#syncBar button{border:0;background:#3155ae;color:#fff;border-radius:9px;padding:8px 13px}#legacyBox{margin-top:12px;padding:12px;background:#fff;border-radius:12px}#legacyBox select{margin:6px 0}</style><style>
 .summaryBox{background:#fff;border-radius:16px;padding:14px;margin:15px 0;box-shadow:0 2px 12px #1a2e5108}.summaryBox h3{margin:0 0 10px}.summaryLine{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid #edf1fa;cursor:pointer;transition:.12s;background:transparent;border-left:0;border-right:0;border-top:0;width:100%;text-align:left;font:inherit;color:inherit}.summaryLine:hover,.summaryLine:focus-visible{background:#f4f7ff;padding-left:8px;padding-right:8px;outline:none}.summaryLine:last-child{border:0}.summaryLine b{white-space:nowrap}.summaryLine small{display:block;color:#68778e}.summaryDetail{margin-top:10px;background:#f7f9fd;border:1px solid #e4e9f3;border-radius:13px;padding:10px}.summaryDetailTitle{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:7px}.summaryDetailTitle b{font-size:14px}.summaryDetailClose{border:0;background:#e9edf5;border-radius:8px;padding:6px 9px;color:#425477}.summaryDetailItem{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-top:1px solid #e5eaf2;font-size:13px}.summaryDetailItem small{color:#748198;display:block}.summaryDetailItem b{white-space:nowrap}.inlineAdd{display:flex;gap:8px;align-items:center;margin-top:8px}.inlineAdd input{flex:1;min-width:0}.inlineAdd button{border:0;border-radius:10px;background:#304fa8;color:white;padding:12px}.hintMini{font-size:12px;color:#67758c}
 </style></head><body><script>
 (function(){
@@ -66,44 +81,88 @@ function payAllForPerson(name,direction){
   for(const item of items)item.payments.push({id:id(),date,amount:remain(item)});
  }))alert('Đã gạch hết '+items.length+' khoản của '+name+' ('+money(total)+'). Xem lại tại Lịch sử.');
 }
+let expandedDebtPerson='';
+function payAllDebtForPerson(name){
+ const items=debts.filter(d=>normalizeName(d.person)===normalizeName(name)&&remain(d)>0);
+ if(!items.length){alert('Người này không còn khoản nợ nào.');return}
+ const owe=items.filter(d=>d.direction==='i_owe').reduce((s,d)=>s+remain(d),0);
+ const owed=items.filter(d=>d.direction==='owe_me').reduce((s,d)=>s+remain(d),0);
+ const total=owe+owed;
+ // Không bù trừ hai chiều: giữ lịch sử và thanh toán từng khoản riêng.
+ const msg='Bạn muốn gạch hết '+items.length+' khoản nợ của '+name+'?\n\n'+
+  (owed?'Người này đã trả bạn: '+money(owed)+'\n':'')+
+  (owe?'Bạn đã trả người này: '+money(owe)+'\n':'')+
+  'Tổng số tiền gạch: '+money(total)+'\n\n'+
+  (owed&&owe?'Lưu ý: thao tác này xác nhận CẢ HAI CHIỀU đều đã thanh toán, không bù trừ nợ.\n\n':'')+
+  'Các khoản được giữ trong Lịch sử, không xóa dữ liệu.';
+ if(!confirm(msg))return;
+ const date=today();
+ if(persist(()=>{
+  for(const d of items)d.payments.push({id:id(),date,amount:remain(d)});
+ })){
+  expandedDebtPerson='';
+  alert('Đã gạch đủ '+items.length+' khoản, tổng '+money(total)+'.');
+ }
+}
 function personSummaries(){
  const map=new Map();
+ // Hiển thị cả các lần vay đã tất toán; không xóa lịch sử khi gạch nợ.
  for(const d of debts){
   const key=normalizeName(d.person);
-  if(!map.has(key))map.set(key,{name:d.person,owe:0,owed:0,original:0,oweCount:0,owedCount:0});
-  const item=map.get(key),remaining=remain(d);
-  item.original+=d.amount;
-  if(d.direction==='i_owe'){item.owe+=remaining;if(remaining>0)item.oweCount++}
-  else{item.owed+=remaining;if(remaining>0)item.owedCount++}
+  if(!map.has(key))map.set(key,{key,name:d.person,owe:0,owed:0,items:[],paidCount:0});
+  const entry=map.get(key),balance=remain(d);entry.items.push(d);
+  if(balance===0)entry.paidCount++;
+  if(d.direction==='i_owe')entry.owe+=balance;else entry.owed+=balance;
  }
  const root=$('debtPeopleSummary');root.replaceChildren();
- for(const v of [...map.values()].filter(x=>x.owe||x.owed).sort((a,b)=>b.owe+b.owed-a.owe-a.owed)){
-  const row=document.createElement('div');row.className='summaryLine debtPersonRow';
-  const info=document.createElement('div');info.className='debtPersonInfo';
-  const top=document.createElement('div');top.className='debtPersonTop';
-  const left=document.createElement('span');left.textContent=v.name;
-  const right=document.createElement('b');right.textContent=money(v.owe+v.owed);
-  top.append(left,right);
-  const detail=document.createElement('small');detail.textContent='Tôi nợ: '+money(v.owe)+' • Nợ tôi: '+money(v.owed);
-  info.append(top,detail);
-  const actions=document.createElement('div');actions.className='debtPersonActions';
-  if(v.owed>0){
-   const button=document.createElement('button');button.type='button';button.className='debtPayAllBtn';
-   button.textContent='✓ Đã thu đủ '+money(v.owed);
-   button.setAttribute('aria-label','Gạch hết '+v.owedCount+' khoản người '+v.name+' nợ tôi');
-   button.onclick=()=>payAllForPerson(v.name,'owe_me');actions.append(button);
+ for(const v of [...map.values()].sort((a,b)=>(b.owe+b.owed)-(a.owe+a.owed)||a.name.localeCompare(b.name,'vi'))){
+  const outstanding=v.owe+v.owed;
+  const section=document.createElement('div');section.className='debtPersonAccordion';
+  const top=document.createElement('button');top.type='button';top.className='debtPersonToggle';
+  const texts=document.createElement('span');texts.className='debtPersonText';
+  const name=document.createElement('strong');name.textContent=v.name;
+  const extra=document.createElement('small');extra.textContent='Tôi nợ: '+money(v.owe)+' • Nợ tôi: '+money(v.owed)+' • '+v.items.length+' lần ('+v.paidCount+' đã trả hết)';
+  texts.append(name,extra);
+  const total=document.createElement('b');total.textContent=money(outstanding);
+  const arrow=document.createElement('span');arrow.className='debtPersonArrow';arrow.textContent=expandedDebtPerson===v.key?'⌃':'⌄';
+  arrow.setAttribute('aria-hidden','true');
+  top.append(texts,total,arrow);section.append(top);
+  const content=document.createElement('div');content.className='debtPersonExpanded';content.hidden=expandedDebtPerson!==v.key;
+  top.setAttribute('aria-expanded',String(!content.hidden));
+  top.setAttribute('aria-label','Xem hoặc thu gọn '+v.items.length+' lần vay của '+v.name);
+  top.onclick=()=>{expandedDebtPerson=content.hidden?v.key:'';personSummaries()};
+  if(outstanding>0){
+   const actions=document.createElement('div');actions.className='debtPersonActions';
+   const all=document.createElement('button');all.type='button';all.className='debtPayAllBtn';
+   all.textContent='✓ Đã trả đủ '+money(outstanding);
+   all.onclick=()=>payAllDebtForPerson(v.name);
+   actions.append(all);section.append(actions);
   }
-  if(v.owe>0){
-   const button=document.createElement('button');button.type='button';button.className='debtPayAllBtn';
-   button.textContent='✓ Đã trả đủ '+money(v.owe);
-   button.setAttribute('aria-label','Gạch hết '+v.oweCount+' khoản tôi nợ '+v.name);
-   button.onclick=()=>payAllForPerson(v.name,'i_owe');actions.append(button);
+  // Khoản còn nợ trước, đã trả hết sau; cùng trạng thái thì mới nhất trước.
+  const items=v.items.slice().sort((a,b)=>{
+   const aPaid=remain(a)===0,bPaid=remain(b)===0;
+   return Number(aPaid)-Number(bPaid)||String(b.date||'').localeCompare(String(a.date||''));
+  });
+  for(const d of items){
+   const balance=remain(d),paid=Number(d.amount)-balance;
+   const item=document.createElement('div');item.className='debtPersonDebtItem';
+   const summary=document.createElement('div');summary.className='debtPersonItemMain';
+   const who=document.createElement('strong');who.textContent=(d.direction==='owe_me'?'🟢 Người này nợ tôi':'🔴 Tôi nợ người này')+' • '+money(d.amount);
+   const date=document.createElement('small');date.textContent='Ngày ghi: '+String(d.date||'').split('-').reverse().join('/')+(d.note?' • '+d.note:'');
+   const state=document.createElement('small');state.textContent=balance===0?'✓ Đã trả hết '+money(d.amount):'Đã trả '+money(paid)+' • Còn '+money(balance);
+   state.className=balance===0?'debtPersonPaid':'debtPersonUnpaid';
+   summary.append(who,date,state);item.append(summary);
+   if(balance>0){
+    const btn=document.createElement('button');btn.type='button';btn.className='debtPersonPayBtn';btn.textContent='✓ Thanh toán khoản này';
+    btn.onclick=()=>openPay(d.id);item.append(btn);
+   }
+   content.append(item);
   }
-  row.append(info,actions);root.append(row);
+  section.append(content);root.append(section);
  }
- if(!root.childElementCount)root.textContent='Không có khoản nợ chưa trả';
+ if(!root.childElementCount)root.textContent='Chưa có lịch sử vay hoặc cho vay';
  const list=$('debtPeopleOptions');list.replaceChildren();
- for(const v of map.values()){const o=document.createElement('option');o.value=v.name;list.append(o)}
+ for(const v of map.values()){const opt=document.createElement('option');opt.value=v.name;list.append(opt)}
 }
 function valid(d){return d&&typeof d.id==='string'&&['i_owe','owe_me'].includes(d.direction)&&typeof d.person==='string'&&Number.isSafeInteger(d.amount)&&d.amount>0&&d.amount<=1e12&&/^\d{4}-\d{2}-\d{2}$/.test(d.date)&&typeof d.note==='string'&&Array.isArray(d.payments)&&d.payments.every(p=>Number.isSafeInteger(p.amount)&&p.amount>0&&typeof p.date==='string')}
 function load(){try{const a=JSON.parse(localStorage.getItem(KEY)||'[]');debts=Array.isArray(a)?a.filter(valid):[]}catch{debts=[]}}
